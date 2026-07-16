@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+html,
+body {
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+}
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 210mm;
+    height: auto;
+    background: white;
+    overflow: visible;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    box-sizing: border-box;
+  }
+
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+/* ── Print: clean A4, no toolbar, no shadows ── */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  /* allow multi-page printing */
+  html {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /*
+   * Let the Rx textarea grow to show ALL typed content when printing.
+   * Without this, a <textarea> only prints its visible region.
+   */
+  textarea {
+    overflow: visible;
+    /* Show the full content as printed text */
+    white-space: pre-wrap;
+  }
+
+  /*
+   * Prevent the Advice + Signature block from ever breaking mid-section.
+   * This is the CSS-level enforcement of the break-inside:avoid wrapper.
+   */
+  [class*="break-inside"] {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important; /* legacy fallback */
+  }
+}
