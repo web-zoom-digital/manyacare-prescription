@@ -9,7 +9,7 @@ import React from "react";
 function LogoMark() {
   return (
     <img
-      src="./logo.jpeg"
+      src="/logo.png"
       alt="ManyaCare logo"
       width={160}
       height={160}
