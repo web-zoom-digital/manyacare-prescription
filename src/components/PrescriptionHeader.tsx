@@ -11,8 +11,7 @@ function LogoMark() {
     <img
       src="/logo.png"
       alt="ManyaCare logo"
-      width={160}
-      height={160}
+      width={240}
       className="shrink-0 object-contain"
     />
   );
@@ -84,7 +83,7 @@ export default function PrescriptionHeader({
       <div className="flex  gap-0">
 
         {/* ── COL 1: Logo + "ManyaCare" + "— HEALTHCITY —" ── */}
-        <div className="flex flex-col mt-2 min-w-[160px]">
+        <div className="flex flex-col mt-2 min-w-[240px]">
           <LogoMark />
 
         </div>

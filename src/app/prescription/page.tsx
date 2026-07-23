@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { toPng } from "html-to-image";
 import PrescriptionHeader from "@/components/PrescriptionHeader";
 import PatientInfoForm from "@/components/PatientInfoForm";
@@ -20,6 +20,19 @@ function WhatsAppIcon() {
 export default function PrescriptionPage() {
   const prescriptionRef = useRef<HTMLFormElement>(null);
   const [sharing, setSharing] = useState(false);
+  const [formZoom, setFormZoom] = useState(1);
+
+  // Scale the A4 form down to fit small mobile screens
+  useEffect(() => {
+    const A4_PX = 794; // 210mm at 96 dpi
+    function updateZoom() {
+      const available = window.innerWidth;
+      setFormZoom(available < A4_PX ? available / A4_PX : 1);
+    }
+    updateZoom();
+    window.addEventListener("resize", updateZoom);
+    return () => window.removeEventListener("resize", updateZoom);
+  }, []);
 
   const handlePrint = () => {
     setTimeout(() => {
@@ -124,10 +137,10 @@ export default function PrescriptionPage() {
 
 
   return (
-    <div className="min-h-screen bg-[#e8edf3] py-8 print:bg-white print:py-0">
+    <div className="min-h-screen bg-[#e8edf3] py-4 sm:py-8 print:bg-white print:py-0">
 
       {/* Toolbar */}
-      <div className="mx-auto mb-5 flex w-[210mm] items-center justify-between print:hidden">
+      <div className="mx-auto mb-4 flex w-full max-w-[210mm] items-center justify-between px-4 sm:px-0 print:hidden">
         <span className="text-[13px] font-semibold tracking-wide text-slate-500">
           ManyaCare Prescription Pad
         </span>
@@ -162,40 +175,44 @@ export default function PrescriptionPage() {
         </div>
       </div>
 
-      <form
-        ref={prescriptionRef}
-        onSubmit={(e) => e.preventDefault()}
-        className="
-          mx-auto
-          w-[210mm]
-          min-h-[297mm]
-          bg-white
-          px-[18mm]
-          py-[16mm]
-          shadow-[0_6px_30px_rgba(0,0,0,0.18)]
+      {/* A4 form – zooms down on mobile, full size on desktop & print */}
+      <div className="flex justify-center print:block">
+        <form
+          ref={prescriptionRef}
+          onSubmit={(e) => e.preventDefault()}
+          style={formZoom < 1 ? { zoom: formZoom } : undefined}
+          className="
+            origin-top
+            w-[210mm]
+            min-h-[297mm]
+            bg-white
+            px-[18mm]
+            py-[16mm]
+            shadow-[0_6px_30px_rgba(0,0,0,0.18)]
 
-          print:w-[210mm]
-          print:min-h-[297mm]
-          print:px-[18mm]
-          print:py-[16mm]
-          print:shadow-none
-          print:m-0
-          print:mx-auto
-        "
-      >
-        <PrescriptionHeader />
+            print:w-[210mm]
+            print:min-h-[297mm]
+            print:px-[18mm]
+            print:py-[16mm]
+            print:shadow-none
+            print:m-0
+            print:mx-auto
+          "
+        >
+          <PrescriptionHeader />
 
-        <div className="break-inside-avoid">
-          <PatientInfoForm />
-        </div>
+          <div className="break-inside-avoid">
+            <PatientInfoForm />
+          </div>
 
-        <RxSection />
+          <RxSection />
 
-        <div className="break-inside-avoid">
-          <AdviceFollowUp />
-          <DoctorSignature />
-        </div>
-      </form>
+          <div className="break-inside-avoid">
+            <AdviceFollowUp />
+            <DoctorSignature />
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
